@@ -1,8 +1,8 @@
-# SQL_TIL
+# SQL_TIL_for Data Analysis
 Every day SQL study 
 
 
-- 1
+- Week 1
     
     문제1번) dvd 렌탈 업체의  dvd 대여가 있었던 날짜를 확인해주세요.
     
