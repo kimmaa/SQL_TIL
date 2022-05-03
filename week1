@@ -1,0 +1,46 @@
+SELECT  ⇒ 일방적으로 테이블에 저장 된 칼럼명을 조회할때 쓰인다
+
+ORDER BY ⇒ ASC 오름차순 정렬 DESC 내림차순 정렬 / 마지막에 세미콜론
+
+---
+
+```sql
+SELECT
+COLUMN_1
+, COLUMN_2
+, 중략...
+
+FROM
+TABLE_NAME
+;
+```
+
+추출대상컬럼
+만약 테이블의 모든 컬럼을 다 보고 싶다면‘*’
+
+추출 대상 테이블명 입력
+세미 콜론으로 끝남
+
+```sql
+SELECT
+COLUMN_1 , COLUMN_2
+FROMTBL_NAME
+ORDER BY 
+  COLUMN_1 ASC
+, COLUMN_2 DESC ;
+```
+
+```sql
+SELECT
+FIRST_NAME , LAST_NAME
+FROM
+CUSTOMER
+ORDER BY 1 ASC
+,2DESC ;
+```
+
+추출대상컬럼
+
+추출 대상 테이블명 입력
+COLUMN_1은 오름차순 정렬(Default는 ASC)
+COLUMN_2은 내림차순 정렬(Default는 ASC)
