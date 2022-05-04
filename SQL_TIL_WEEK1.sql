@@ -11,5 +11,51 @@ SELECT staff_id, first_name, last_name FROM STAFF
 WHERE staff_id = 2;
 
 #문제4번) 지불 내역 중에서,   지불 내역 번호가 17510 에 해당하는  ,  고객의 지출 내역 (amount ) 는 얼마인가요?
+SELECT payment_id, amount FROM payment
+WHERE payment_id = 17510;
+# DB에서 payment_id 가 17510 인 사항이 null값으로 나옴, 확인을 위해서 payment_id도 같이 출력한 구문임
+
+#문제5번) 영화 카테고리 중에서 ,Sci-Fi  카테고리의  카테고리 번호는 몇번인가요?
+SELECT category_id FROM category
+WHERE name = 'Sci-Fi' ;
+
+#문제6번) film 테이블을 활용하여, rating  등급(?) 에 대해서, 몇개의 등급이 있는지 확인해보세요.
+SELECT distinct rating FROM film;
+
+# 문제7번) 대여 기간이 (회수 - 대여일) 10일 이상이였던 rental 테이블에 대한 모든 정보를 알려주세요. 단 , 대여기간은  대여일자부터 대여기간으로 포함하여 계산합니다.
+SELECT *, date(return_date) - date(rental_date)+1 as rental_dur FROM rental
+WHERE date(return_date) - date(rental_date)+1 >= 10; 
+
+/* 문제8번) 고객의 id 가  50,100,150 ..등 50번의 배수에 해당하는 고객들에 대해서, 회원 가입 감사 이벤트를 진행하려고합니다. 
+고객 아이디가 50번 배수인 아이디와, 고객의 이름 (성, 이름)과 이메일에 대해서 확인해주세요. */
+SELECT customer_id, first_name, last_name, email FROM customer
+WHERE customer_id % 50 = 0;
+-- 다른 풀이로 mod() 기능 사용이 가능 The MOD() function returns the remainder of a number divided by another number.
+
+#문제9번) 영화 제목의 길이가 8글자인, 영화 제목 리스트를 나열해주세요.
+SELECT title FROM film
+WHERE length(title) = 8 ;
+
+# 문제10번) city 테이블의 city 갯수는 몇개인가요?
+SELECT count(*) FROM city;
+
+# 문제11번) 영화배우의 이름 (이름+' '+성) 에 대해서,  대문자로 이름을 보여주세요.  단 고객의 이름이 동일한 사람이 있다면,  중복 제거하고, 알려주세요.
+SELECT distinct UPPER(CONCAT(first_name,' ', last_name)) as  actor_name FROM actor;
+
+# 문제12번) 고객 중에서,  active 상태가 0 인 즉 현재 사용하지 않고 있는 고객의 수를 알려주세요.
+SELECT count(distinct customer_id) FROM CUSTOMER;
+
+# 문제13번) Customer 테이블을 활용하여,  store_id = 1 에 매핑된  고객의 수는 몇명인지 확인해보세요.
+SELECT count(distinct customer_id) FROM CUSTOMER
+WHERE store_id=1;
+
+# 문제14번) rental 테이블을 활용하여,  고객이 return 했던 날짜가 2005년6월20일에 해당했던 rental 의 갯수가 몇개였는지 확인해보세요.
+SELECT count(rental_id) FROM rental
+WHERE DATE(return_date) = '2005-06-20';
+
+# 문제15번) film 테이블을 활용하여, 2006년에 출시가 되고 rating 이 'G' 등급에 해당하며, 대여기간이 3일에 해당하는  것에 대한 film 테이블의 모든 컬럼을 알려주세요.
+
+
+
 
 
