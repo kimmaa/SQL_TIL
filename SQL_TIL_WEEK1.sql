@@ -56,20 +56,24 @@ SELECT count(rental_id) FROM rental;
 SELECT * FROM film
 WHERE rental_duration = 3 AND rating = 'G' AND release_year = 2006;
 
-/*
-문제16번)	langugage 테이블에 있는 id, name 컬럼을 확인해보세요 .
+# 문제16번) langugage 테이블에 있는 id, name 컬럼을 확인해보세요 .
+SELECT language_id, name FROM language;
 
-문제17번)	film 테이블을 활용하여,  rental_duration 이  7일 이상 대여가 가능한  film 에 대해서  film_id,   title,  description 컬럼을 확인해보세요.
+# 문제17번) film 테이블을 활용하여,  rental_duration 이  7일 이상 대여가 가능한  film 에 대해서  film_id,   title,  description 컬럼을 확인해보세요.
+SELECT film_id, title, description FROM film
+WHERE rental_duration >=7;
 
-문제18번)	film 테이블을 활용하여,  rental_duration   대여가 가능한 일자가 3일 또는 5일에 해당하는  film_id,  title, desciption 을 확인해주세요.
+# 문제18번) film 테이블을 활용하여, rental_duration 대여가 가능한 일자가 3일 또는 5일에 해당하는 film_id, title, desciption 을 확인해주세요.
+SELECT * FROM film
+WHERE rental_duration =3 OR rental_duration =5;
+-- WHERE 절에서 OR 대신 AND 를 사용할 경우 오류 발생. 연산자를 >=3, <=5, AND 를 사용하게 되면 3일 4일 5일의 결과물이 도출됨
 
-문제19번)	Actor 테이블을 이용하여,  이름이 Nick 이거나  성이 Hunt 인  배우의  id 와  이름, 성을 확인해주세요.
+# 문제19번) Actor 테이블을 이용하여,  이름이 Nick 이거나  성이 Hunt 인  배우의  id 와  이름, 성을 확인해주세요.
+SELECT actor_id, first_name, last_name FROM actor
+WHERE first_name = 'Nick' OR last_name = 'Hunt';
 
-문제20번)	Actor 테이블을 이용하여, Actor 테이블의  first_name 컬럼과 last_name 컬럼을 , firstname, lastname 으로 컬럼명을 바꿔서 보여주세요
-WHERE DATE(return_date) = '2005-06-20';
-
-# 문제15번) film 테이블을 활용하여, 2006년에 출시가 되고 rating 이 'G' 등급에 해당하며, 대여기간이 3일에 해당하는  것에 대한 film 테이블의 모든 컬럼을 알려주세요.*/
-
+#문제20번) Actor 테이블을 이용하여, Actor 테이블의 first_name 컬럼과 last_name 컬럼을, firstname, lastname 으로 컬럼명을 바꿔서 보여주세요
+SELECT first_name as firstname, last_name as lastname FROM actor
 
 
 
