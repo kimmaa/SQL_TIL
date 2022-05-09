@@ -24,16 +24,16 @@
     where employeeid = 705;
 
     ```
-    ''' 
-    - Date에서 요소 추출 EXTRACT ~FROM~
+- Date에서 요소 추출 EXTRACT ~FROM~
     select extract('날짜요소' from 컬럼X) as 별칭 from 테이블A;
+    - 사용할 수 있는 요소 
         YEAR
         MONTH
         DAY
         HOUR
         MINUTE
         SECOND
-    '''
+
     
     문제4번)  customers 테이블을 이용하여,  고객의 이름과 성을 하나의 컬럼으로 전체 이름을 보여주세요 (이름, 성 의 형태로  full_name 이라는 이름으로 보여주세요)
     
