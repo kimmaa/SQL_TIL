@@ -70,15 +70,48 @@ inner join film f on f.film_id = i.film_id;
 */
 
 -- 문제7번) dvd 대여를 제일 많이한 고객 이름은?
-SELECT * FROM payment
+SELECT c.first_name, c.last_name, count(p.rental_id) rental_cnt FROM customer c
+JOIN rental r ON c.customer_id = r.customer_id
+JOIN payment p ON r.rental_id = p.rental_id
+group by c.customer_id
+order by count(p.rental_id) desc
+limit 1;
+-- 처음 sum(p.amount)으로 뽑았는데, 그렇게 하면 많이 빌린 사람이 아니고 많은 지출을 한 사람으로 추출된다. 
+/* 다른 방법
+select  c.first_name , c.last_name, rental_cnt
+from  customer c inner join
+(
+select p.customer_id , count(p.rental_id) rental_cnt
+from payment p
+group by p.customer_id
+order by rental_cnt desc
+limit 1
+) p
+on c.customer_id = p.customer_id ;
+*/
+
+
+-- 문제8번) rental 테이블을  기준으로,   2005년 5월26일에 대여를 기록한 고객 중, 하루에 2번 이상 대여를 한 고객의 ID 값을 확인해주세요.
+SELECT customer_id, count(distinct rental_id) rental_prequency  FROM rental
+WHERE DATE(rental_date) = '2005-05-26'
+group by customer_id
+HAVING count(distinct rental_id) >=2;
+
+-- 문제9번) film_actor 테이블을 기준으로, 출현한 영화의 수가 많은  5명의 actor_id 와 , 출현한 영화 수 를 알려주세요.
+SELECT actor_id, count(distinct film_id) numbers_of_film FROM film_actor
+group by actor_id
+order by count(distinct film_id) DESC
+limit 5; 
+
+-- 문제10번) payment 테이블을 기준으로,  결제일자가 2007년2월15일에 해당 하는 주문 중에서, -->해당 날짜에 데이터가 없어서 임의로 바꿈 2005-07-11
+-- 하루에 2건 이상 주문한 고객의  총 결제 금액이 10달러 이상인 고객에 대해서 알려주세요. (고객의 id,  주문건수 , 총 결제 금액까지 알려주세요)
+SELECT customer_id, count(distinct rental_id) rental_frequency, sum(amount) total_amount FROM payment
+WHERE DATE(payment_date) = '2005-07-11'
+group by customer_id
+HAVING count(distinct rental_id)>=2 and sum(amount) >= 10;
+
+
 /*
---문제8번) rental 테이블을  기준으로,   2005년 5월26일에 대여를 기록한 고객 중, 하루에 2번 이상 대여를 한 고객의 ID 값을 확인해주세요.
-
---문제9번) film_actor 테이블을 기준으로, 출현한 영화의 수가 많은  5명의 actor_id 와 , 출현한 영화 수 를 알려주세요.
-
---문제10번) payment 테이블을 기준으로,  결제일자가 2007년2월15일에 해당 하는 주문 중에서  ,  하루에 2건 이상 주문한 고객의  총 결제 금액이 10달러 이상인 고객에 대해서 알려주세요.
---(고객의 id,  주문건수 , 총 결제 금액까지 알려주세요)
-
 --문제11번) 사용되는 언어별 영화 수는?
 
 --문제12번) 40편 이상 출연한 영화 배우(actor) 는 누구인가요?
