@@ -10,9 +10,13 @@ WHERE  film_id IN (SELECT film_id FROM film f WHERE rating = 'R')
 order by actor_id ASC;
 -- Notice the "AS flag" above - it is an alias. SQL Aliases are used to give a table or a column a temporary name. An alias only exists for the duration of the query. So, here we have created a temporary column named "flag", that list whether the contact person is a "180mins_over" or a "Rating_R".
 
--- 문제2번) R등급의 영화에 출연했던 배우이면서, 동시에, Alone Trip의 영화에 출연한  영화배우의 ID 를 확인해주세요.
--- - film_actor 테이블와 film 테이블을 이용하세요.
--- - union, unionall, intersect, except 중 상황에 맞게 사용해주세요.
+-- 문제2번) R등급의 영화에 출연했던 배우이면서, 동시에, Alone Trip의 영화에 출연한 영화배우의 ID 를 확인해주세요.
+-- - film_actor 테이블와 film 테이블을 이용하세요. union, unionall, intersect, except 중 상황에 맞게 사용해주세요.
+SELECT a.actor_id, a.first_name, a.last_name FROM film f
+JOIN film_actor fa ON f.film_id = fa.film_id
+JOIN actor a ON fa.actor_id = a.actor_id
+WHERE f.rating = 'R' OR f.title = 'Alone Trip';
+
 /* MySQL에서는 INTERSECT 구문은 작동하지 않는다. 
 SQL에는 집합 개념을 활용한 UNION(합집합), UNION ALL(중복 포함 합집합) INTERSECT(교집합), EXCEPT(차집합) 연산자가 존재한다.
 참고 : Oracle에서는 EXCEPT 대신 MINUS 연산자가 사용된다.
@@ -37,13 +41,13 @@ FROM   film_actor fa
 WHERE  film_id IN (SELECT film_id
                    FROM   film f
                    WHERE  title = 'Alone Trip')
+*/
+
+-- 문제3번) G 등급에 해당하는 필름을 찍었으나, 영화를 20편이상 찍지 않은 영화배우의 ID 를 확인해주세요.
+-- - film_actor 테이블와 film 테이블을 이용하세요. union, unionall, intersect, except 중 상황에 맞게 사용해주세요.
+/*https://yahwang.github.io/posts/52*/
 
 /*
-문제3번) G 등급에 해당하는 필름을 찍었으나,   영화를 20편이상 찍지 않은 영화배우의 ID 를 확인해주세요.
-
-- film_actor 테이블와 film 테이블을 이용하세요.
-- union, unionall, intersect, except 중 상황에 맞게 사용해주세요.
-
 문제4번) 필름 중에서,  필름 카테고리가 Action, Animation, Horror 에 해당하지 않는 필름 아이디를 알려주세요.
 
 - category 테이블을 이용해서 알려주세요.
