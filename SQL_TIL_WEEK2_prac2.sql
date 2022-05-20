@@ -110,21 +110,44 @@ WHERE DATE(payment_date) = '2005-07-11'
 group by customer_id
 HAVING count(distinct rental_id)>=2 and sum(amount) >= 10;
 
+-- 문제11번) 사용되는 언어별 영화 수는?
+SELECT l.name, count(l.name) cnt FROM film f
+JOIN language l ON f.language_id = l.language_id
+group by l.name;
 
+-- 문제12번) 40편 이상 출연한 영화 배우(actor) 는 누구인가요?
+SELECT concat(a.first_name, ' ', a.last_name) actor_fullname, count(fa.film_id) film_number FROM film f
+JOIN film_actor fa ON f.film_id = fa.film_id
+JOIN actor a ON fa.actor_id = a.actor_id
+group by a.actor_id
+HAVING count(fa.film_id) >= 40;
+
+-- 같은 결과 다른 표현
+select  a.first_name , a.last_name , fc.cnt
+from (select fc.actor_id, count(*) cnt
+from film_actor fc
+group by fc.actor_id
+having count(*) >= 40) fc
+inner join actor a on a.actor_id = fc.actor_id;
+
+-- 문제13번) 고객 등급별 고객 수를 구하세요. (대여 금액 혹은 매출액에 따라 고객 등급을 나누고 조건은 아래와 같습니다.)
 /*
---문제11번) 사용되는 언어별 영화 수는?
-
---문제12번) 40편 이상 출연한 영화 배우(actor) 는 누구인가요?
-
---문제13번) 고객 등급별 고객 수를 구하세요. (대여 금액 혹은 매출액  에 따라 고객 등급을 나누고 조건은 아래와 같습니다.)
-/*
-A 등급은 151 이상
-B 등급은 101 이상 150 이하
-C 등급은   51 이상 100 이하
-D 등급은   50 이하
-
-- 대여 금액의 소수점은 반올림 하세요.
-
-HINT
-반올림 하는 함수는 ROUND 입니다.	
+A 등급은 151 이상 // B 등급은 101 이상 150 이하
+C 등급은 51  이상 100 이하 // D 등급은 50  이하
+- 대여 금액의 소수점은 반올림 하세요. HINT 반올림 하는 함수는 ROUND 입니다.	
 */
+SELECT CASE WHEN rental_amount >= 150 THEN 'A' 
+WHEN rental_amount BETWEEN 101 AND 150 THEN 'B'
+WHEN rental_amount BETWEEN 51 AND 100 THEN 'C'
+WHEN rental_amount <= 50 THEN 'D' END customer_classes, count(*) class_count
+FROM (
+SELECT r.customer_id , round(sum(p.amount) ,0) rental_amount FROM rental r
+JOIN payment p ON r.rental_id = p.rental_id
+group by r.customer_id
+) r
+group by case when rental_amount <= 50 then 'D'
+when rental_amount between 51  and 100 then 'C'
+when rental_amount between 101 and 150 then 'B'
+when rental_amount >= 151  then 'A' end
+ORDER by customer_classes ASC;
+
