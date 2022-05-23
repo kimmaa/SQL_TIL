@@ -62,15 +62,52 @@ HAVING NOT Count(DISTINCT fa.film_id) >= 20;
 
 -- 문제4번) 필름 중에서,  필름 카테고리가 Action, Animation, Horror 에 해당하지 않는 필름 아이디를 알려주세요.
 -- - category 테이블을 이용해서 알려주세요.
+SELECT distinct f.film_id FROM film f
+JOIN film_category fc ON f.film_id = fc.film_id
+JOIN category c ON fc.category_id = fc.category_id
+WHERE NOT c.name IN ('Action', 'Animation', 'Horror');
 
-/*
-문제5번) Staff  의  id , 이름, 성 에 대한 데이터와 , Customer 의 id, 이름 , 성에 대한 데이터를  하나의  데이터셋의 형태로 보여주세요.
+-- 문제5번) Staff  의  id , 이름, 성 에 대한 데이터와 , Customer 의 id, 이름 , 성에 대한 데이터를 하나의 데이터셋의 형태로 보여주세요.
+-- - 컬럼 구성 : id, 이름 , 성, flag (직원/고객여부) 로 구성해주세요.
+SELECT staff_id id, first_name, last_name, 'STAFF' as flag FROM staff
+UNION ALL
+SELECT customer_id id, first_name, last_name, 'CUSTOMER' as flag FROM customer;
 
-- 컬럼 구성 : id, 이름 , 성, flag (직원/고객여부) 로 구성해주세요.
+-- 문제6번) 직원과  고객의 이름이 동일한 사람이 혹시 있나요? 있다면, 해당 사람의 이름과 성을 알려주세요.
+SELECT c.first_name, c.last_name FROM customer c 
+JOIN staff s ON c.store_id = s.store_id 
+WHERE c.first_name = s.first_name;
 
-문제6번) 직원과  고객의 이름이 동일한 사람이 혹시 있나요? 있다면, 해당 사람의 이름과 성을 알려주세요.
+-- 문제7번) 반납이 되지 않은 대여점(store)별 영화 재고 (inventory)와 전체 영화 재고를 같이 구하세요. (union all)
+SELECT s.store_id, count(*) cnt FROM rental r
+JOIN staff s ON r.staff_id = s.staff_id
+WHERE r.rental_date IS NOT NULL
+AND r.return_date IS NULL
+group by s.store_id
+UNION ALL
+SELECT i.store_id, count(*) cnt
+FROM inventory i 
+GROUP BY i.store_id;
 
-문제7번) 반납이 되지 않은 대여점(store)별 영화 재고 (inventory)와 전체 영화 재고를 같이 구하세요. (union all)
-
-문제8번) 국가(country)별 도시(city)별 매출액, 국가(country)매출액 소계 그리고 전체 매출액을 구하세요. (union all)
-*/
+-- 문제8번) 국가(country)별 도시(city)별 매출액, 국가(country)매출액 소계 그리고 전체 매출액을 구하세요. (union all)
+SELECT cr.country, ct.city, sum(p.amount)  FROM payment p 
+	JOIN customer c ON p.customer_id = c.customer_id
+	JOIN address a ON c.address_id = a.address_id
+	JOIN city ct ON a.city_id = ct.city_id
+	JOIN country cr ON ct.country_id = cr.country_id
+group by cr.country, ct.city
+UNION ALL
+SELECT cr.country, NULL as city, sum(p.amount)  FROM payment p 
+	JOIN customer c ON p.customer_id = c.customer_id
+	JOIN address a ON c.address_id = a.address_id
+	JOIN city ct ON a.city_id = ct.city_id
+	JOIN country cr ON ct.country_id = cr.country_id
+group by cr.country
+UNION ALL
+SELECT NULL as country, NULL as city, sum(p.amount)  FROM payment p 
+	JOIN customer c ON p.customer_id = c.customer_id
+	JOIN address a ON c.address_id = a.address_id
+	JOIN city ct ON a.city_id = ct.city_id
+	JOIN country cr ON ct.country_id = cr.country_id
+-- 국가별 전체 매출액에는 도시가 NULL값이어야 하기때문에 SELECT NULL as city 로 해줌alter
+-- 전체 매출액은 전체 합이기 때문에 SELECT  NULL as country, NULL as city 로 해줌
