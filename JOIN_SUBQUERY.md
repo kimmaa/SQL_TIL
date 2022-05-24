@@ -7,10 +7,8 @@
        Cross조인
        Natural조인
 2. 서브 쿼리
-       집합연산자와 서브쿼리 = Union연산
-       집합연산자와 서브쿼리 = UnionAll연산
-       집합연산자와 서브쿼리 = intersect연산
-       집합연산자와 서브쿼리 = Except연산
+
+       
 
 ## JOIN
 - 두 테이블을 붙여서 정보를 추출하는 방법
@@ -41,6 +39,20 @@ INNER JOIN Atable b
 ON a.column1 = b.column2
 WHERE a.column2 = '조건';
 ```
+
 ## 서브 쿼리
-- SELECT 안에 또다른 SELECT가 들어가는것 
-- 2개의 sql문을 하나로 중첩쿼리는 괄호로 표기후 마지막에 ;로 
+- SELECT 안에 또다른 SELECT가 들어가는것 (쿼리 안에 쿼리가 있는 상태)
+- 2개의 sql문을 하나로 중첩쿼리는 괄호로 표기 
+- FROM, JOIN 에 서브쿼리를 사용하는 경우 마지막 alias를 정해주어서 테이블 명칭을 쿼리 내에서 사용할 수 있게 해야 한다.
+```sql
+SELECT CASE WHEN rental_amount >= 150 THEN 'A' 
+WHEN rental_amount <= 50 THEN 'D' END customer_classes, count(*) class_count
+FROM (
+SELECT r.customer_id , round(sum(p.amount) ,0) rental_amount FROM rental r
+JOIN payment p ON r.rental_id = p.rental_id
+group by r.customer_id
+) r
+group by case when rental_amount <= 50 then 'D'
+when when rental_amount >= 151  then 'A' end
+ORDER by customer_classes ASC;
+```
