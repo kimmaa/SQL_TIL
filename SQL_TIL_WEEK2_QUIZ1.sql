@@ -24,10 +24,20 @@ left join order_details od on p.productnumber = od.productnumber
 left join orders o on od.ordernumber = o.ordernumber;
 
 -- 4.캘리포니아 주와 캘리포니아 주가 아닌 STATS 로 구분하여 각 주문량을 알려주세요. (CASE문 사용)
-select * from customers c 
-join
+select db.stats, count(distinct ordernumber) as order_count 
+from (select c.customerid,c.custstate, o.ordernumber, od.quantityordered,
+case when custstate = 'CA' then 'Y_CA'
+else 'N_CA' end as STATS  from customers c
+left join orders o on c.customerid = o.customerid 
+left join order_details od on o.ordernumber = od.ordernumber ) as db
+group by db.stats;
 
 -- 5.공급 업체 와 판매 제품 수를 나열하세요. 단 판매 제품수가 2개 이상인 곳만 보여주세요.
+select vendname, count(distinct productnumber) as pd_numbers  from product_vendors pv 
+join vendors v ON pv.vendorid = v.vendorid 
+group by vendname
+having count(distinct productnumber) >=2;
+
 -- 6. 가장 높은 주문 금액을 산 고객은 누구인가요?
 -- - 주문일자별, 고객의 아이디별로, 주문번호, 주문 금액도 함께 알려주세요.
 -- 7.주문일자별로, 주문 갯수와,  고객수를 알려주세요.
