@@ -38,10 +38,21 @@ join vendors v ON pv.vendorid = v.vendorid
 group by vendname
 having count(distinct productnumber) >=2;
 
--- 6. 가장 높은 주문 금액을 산 고객은 누구인가요?
--- - 주문일자별, 고객의 아이디별로, 주문번호, 주문 금액도 함께 알려주세요.
--- 7.주문일자별로, 주문 갯수와,  고객수를 알려주세요.
--- - ex) 하루에 한 고객이 주문을 2번이상했다고 가정했을때 -> 해당의 경우는 고객수는 1명으로 계산해야합니다.
+-- 6. 가장 높은 주문 금액을 산 고객은 누구인가요? - 주문일자별, 고객의 아이디별로, 주문번호, 주문 금액도 함께 알려주세요.
+select orderdate, customerid, ordernumber, sum(prices) as total_prices from 
+(select  o.orderdate, o.customerid, o.ordernumber, od.productnumber, od.quotedprice * od.quantityordered as prices from orders o 
+join order_details od on o.ordernumber = od.ordernumber) as od_db
+group by orderdate, customerid, ordernumber
+order by total_prices desc 
+limit 1
+
+-- 7.주문일자별로, 주문 갯수와,  고객수를 알려주세요.-- - ex) 하루에 한 고객이 주문을 2번이상했다고 가정했을때 -> 해당의 경우는 고객수는 1명으로 계산해야합니다.
+select orderdate, count(distinct ordernumber) as order_cnt, count(distinct customerid) as cust_cnt from
+(select  o.orderdate, o.customerid, o.ordernumber, od.productnumber, od.quotedprice * od.quantityordered as prices from orders o 
+join order_details od on o.ordernumber = od.ordernumber) as od_db
+group by orderdate
+order by orderdate asc;
+
 -- 9.타이어과 헬멧을 모두 산적이 있는 고객의 ID 를 알려주세요.
 -- - 타이어와 헬멧에 대해서는 , Products 테이블의 productname 컬럼을 이용해서 확인해주세요.
 -- 10. 타이어는 샀지만, 헬멧을 사지 않은 고객의 ID 를 알려주세요. Except 조건을 사용하여, 풀이 해주세요.
