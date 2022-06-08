@@ -55,5 +55,31 @@ order by orderdate asc;
 
 -- 9.타이어과 헬멧을 모두 산적이 있는 고객의 ID 를 알려주세요.
 -- - 타이어와 헬멧에 대해서는 , Products 테이블의 productname 컬럼을 이용해서 확인해주세요.
+select customerid, productname from (select * from order_details od 
+join orders o on od.ordernumber = o.ordernumber
+join products p on od.productnumber = p.productnumber 
+where p.productname like '%Helmet' or p.productname like '%Tire') as pro;
+----- 다시 봐야함. 
+
+-- postgreSQL에서 사용 가능한 intersect 방식
+select o.customerid from orders o
+join order_details od on o.ordernumber = od.ordernumber
+join products p on od.productnumber =p.productnumber
+where p.productname like '%Tires'
+intersect
+select o.customerid from orders o
+join order_details od on o.ordernumber = od.ordernumber
+join products p on od.productnumber =p.productnumber
+where p.productname like '%Helmet';
+
 -- 10. 타이어는 샀지만, 헬멧을 사지 않은 고객의 ID 를 알려주세요. Except 조건을 사용하여, 풀이 해주세요.
 -- - 타이어, 헬멧에 대해서는, Products 테이블의 productname 컬럼을 이용해서 확인해주세요. 
+select o.customerid from orders o
+join order_details od on o.ordernumber = od.ordernumber
+join products p on od.productnumber =p.productnumber
+where p.productname like '%Tires'
+except 
+select o.customerid from orders o
+join order_details od on o.ordernumber = od.ordernumber
+join products p on od.productnumber =p.productnumber
+where p.productname like '%Helmet';
