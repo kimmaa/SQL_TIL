@@ -75,7 +75,12 @@ GROUP BY YEAR(payment_date), DAY(payment_date) with rollup;
 
 -- 문제9번) 지점 별,  active 고객의 수와 ,   active 고객 수 를  함께 보여주세요. 지점과, active 여부에 대해서는 customer 테이블을 이용하여 보여주세요.
 -- - grouping sets 를 이용해서 풀이해주세요.
-
+SELECT store_id, active, Count(customer_id) AS cnt FROM customer c
+GROUP BY GROUPING SETS( ( store_id, active ), ( active ) );
 
 -- 문제10번) 지점 별,  active 고객의 수와 ,   active 고객 수 를  함께 보여주세요. 지점과, active 여부에 대해서는 customer 테이블을 이용하여 보여주세요.
 -- - roll up으로 풀이해보면서, grouping sets 과의 차이를 확인해보세요.
+
+-- WITH ROLLUP 사용
+SELECT store_id, ifnull(active, 'store total') active, count(customer_id) FROM customer c
+GROUP BY store_id, active WITH ROLLUP;
