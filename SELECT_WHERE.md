@@ -1,4 +1,5 @@
 # SQL_TIL_for Data Analysis
+0. 데이터형식
 1. USE
 2. select
 3. select distinct
@@ -9,6 +10,33 @@
 8. Between
 9. Isnull
 
+## 데이터 형식
+- DB의 데이터를 최적화
+- 쿼리 속도에도 영향
+### 정수형
+- TINYINT (1 byte)
+- SMALLINT (2 byte)
+- INT (4 byte)
+- BIGINT (8 byte)
+- 추가로 부호를 사용하는 SIGNED와 양수만 사용하는 UNSIGNED
+
+- 추가적으로 숫자로서 의미를 가지려면 다음 2가지 조건을 만족해야한다.
+-   더하기/빼기 등 연산에 의미가 있다.
+-   크다/작다 또는 순서에 의미가 있다.
+-   전화번호 같은 것은 형태는 숫자이지만 숫자의 의미를 지니지 않기 때문에 CHAR(문자형)로 저장하는 것이 조금 더 효율적
+
+### 문자형
+- CHAR (1~255 byte) 고정 길이
+- VARCHAR (1 ~ 16383 byte) 가변 길이
+- CHAR(10)을 사용하면 'abc'를 저장해도 10자리를 사용, VARCHAR(10)에 'abc'를 저장하면 3자리만 가변적으로 사용
+- CHAR를 사용하면 메모리 관리 측면에선 안 좋을 수 있지만 성능적으로는 더 효율이 좋기 때문에 고정적인 값을 저장할 때는 CHAR를 사용하는 것이 더 효율적
+
+
+
+### 대량 문자 저장
+- TEXT/BLOB 형식
+- 실수형 FLOAT/DOUBLE
+- 날짜형 DATE/TIME/DATETIME
 
 ## USE
 - 사용할 데이터베이스를 가져올때 사용한다. 
